@@ -2,6 +2,7 @@ package com.company.dsa;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,27 @@ public class FilesUtils {
     }
 
     public static Map<String, Integer> getDirectoryStats(String path) {
-        throw new UnsupportedOperationException();
+        Map<String, Integer> fileStats = new HashMap<>();
+        File file = new File(path);
+        gatherFileStats(file, fileStats);
+        return fileStats;
+    }
+
+
+    private static void gatherFileStats(File directory, Map<String, Integer> fileStats) {
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        gatherFileStats(file, fileStats);
+                    } else {
+                        String[] parts = file.getName().split("\\.");
+                        String extension = parts[parts.length - 1];
+                        fileStats.put(extension, fileStats.getOrDefault(extension, 0) + 1);
+                    }
+                }
+            }
+        }
     }
 }
