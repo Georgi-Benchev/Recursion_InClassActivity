@@ -1,6 +1,7 @@
 package com.company.dsa;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,21 @@ public class FilesUtils {
     }
 
     public static List<String> findFiles(String path, String extension) {
-        throw new UnsupportedOperationException();
+        List<String> fileNames = new ArrayList<>();
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File fileInArray : files) {
+                if (fileInArray.isDirectory()) {
+                    fileNames.addAll(findFiles(fileInArray.getPath(), extension));
+                } else {
+                    if (fileInArray.getName().endsWith(extension)) {
+                        fileNames.add(fileInArray.getName());
+                    }
+                }
+            }
+        }
+        return fileNames;
     }
 
     public static boolean fileExists(String path, String fileName) {
