@@ -50,7 +50,23 @@ public class FilesUtils {
     }
 
     public static boolean fileExists(String path, String fileName) {
-        throw new UnsupportedOperationException();
+
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File fileInArray : files) {
+                if (fileInArray.isDirectory()) {
+                    if (fileExists(fileInArray.getPath(), fileName)) {
+                        return true;
+                    }
+                } else {
+                    if (fileInArray.getName().equals(fileName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static Map<String, Integer> getDirectoryStats(String path) {
